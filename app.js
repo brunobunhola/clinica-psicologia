@@ -3,7 +3,7 @@
    ================================================ */
 
 // ========== DATA STORE ==========
-const DEFAULT_USER = { username: 'admin', password: 'admin', name: 'Admin' };
+const DEFAULT_USER = { username: 'admin', password: 'brunoAdmin12345@', name: 'Admin' };
 
 function getUsers() {
     const users = localStorage.getItem('psiclinic_users');
@@ -1680,6 +1680,16 @@ function printAnamnese() {
     if (!patientId) return;
     window.print();
 }
+
+// Migration: Ensure admin password matches DEFAULT_USER
+(function migrateAdminPassword() {
+    const users = getUsers();
+    const adminIndex = users.findIndex(u => u.username === 'admin');
+    if (adminIndex !== -1 && users[adminIndex].password !== DEFAULT_USER.password) {
+        users[adminIndex].password = DEFAULT_USER.password;
+        saveUsers(users);
+    }
+})();
 
 // Initialize branding
 document.addEventListener('DOMContentLoaded', updateClinicBranding);
